@@ -58,7 +58,7 @@ export function IndustryNode({
         'absolute flex flex-col justify-center rounded-xl border px-3.5 py-3 text-left transition-[border-color,box-shadow,background-color,transform] duration-200',
         'hover:-translate-y-px',
         isLit
-          ? 'border-accent bg-surface shadow-[0_0_0_3px_rgba(79,70,229,0.10),0_10px_24px_-14px_rgba(26,26,26,0.4)]'
+          ? 'border-accent bg-surface shadow-[0_0_0_3px_rgba(111,69,32,0.12),0_10px_24px_-14px_rgba(26,26,26,0.4)]'
           : state === 'related'
             ? 'border-accent-line bg-surface shadow-card'
             : node.isFocus

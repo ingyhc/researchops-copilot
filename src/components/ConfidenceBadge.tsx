@@ -30,8 +30,8 @@ export function ConfidenceBadge({
     clamped >= 80
       ? { ring: 'var(--color-accent)', text: 'text-accent' }
       : clamped >= 65
-        ? { ring: '#7c74e8', text: 'text-[#5f57d6]' }
-        : { ring: '#a8a3d9', text: 'text-ink-muted' };
+        ? { ring: '#8d6237', text: 'text-[#7a4f26]' }
+        : { ring: '#bda88f', text: 'text-ink-muted' };
 
   return (
     <div

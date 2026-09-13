@@ -1,6 +1,7 @@
 import { IndustryMap } from '@/components/IndustryMap';
 import { InsightCard } from '@/components/InsightCard';
 import { Sparkle } from '@/components/icons';
+import { useLang } from '@/i18n';
 import type { IndustryFramework } from '@/types';
 
 interface IndustryIntelligencePanelProps {
@@ -11,6 +12,7 @@ interface IndustryIntelligencePanelProps {
 export function IndustryIntelligencePanel({
   framework,
 }: IndustryIntelligencePanelProps) {
+  const { t } = useLang();
   const { clientFocus } = framework;
 
   return (
@@ -19,13 +21,12 @@ export function IndustryIntelligencePanel({
 
       <InsightCard
         index={1}
-        eyebrow="Scope"
         title={clientFocus.title}
         description={clientFocus.description}
         aside={
           <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-line bg-accent-soft px-2.5 py-1 text-[11px] font-semibold text-accent">
             <Sparkle size={12} />
-            Sourcing priority
+            {t.agent2.sourcingPriority}
           </span>
         }
         className="border-accent-line bg-gradient-to-b from-accent-soft/50 to-surface"

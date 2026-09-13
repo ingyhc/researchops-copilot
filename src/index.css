@@ -14,9 +14,9 @@
   --color-ink-faint: #a3a39a;
   --color-line: #e5e4df;
   --color-line-strong: #d6d5cf;
-  --color-accent: #4f46e5;
-  --color-accent-soft: #eef2ff;
-  --color-accent-line: #c7d2fe;
+  --color-accent: #6f4520;
+  --color-accent-soft: #f6eee5;
+  --color-accent-line: #e2cdb5;
   --color-positive: #157f60;
   --color-positive-soft: #e8f4ef;
   --color-caution: #9a6b16;
@@ -49,7 +49,7 @@
   }
 
   ::selection {
-    background-color: #dfe0fb;
+    background-color: #ecdcc9;
   }
 
   :focus-visible {

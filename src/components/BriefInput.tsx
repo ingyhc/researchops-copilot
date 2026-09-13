@@ -1,6 +1,7 @@
 import { useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Command, FileText, Sparkle } from '@/components/icons';
+import { useLang } from '@/i18n';
 import { cn } from '@/lib/cn';
 
 /** Names the intake step can recognise locally — no model call involved. */
@@ -43,6 +44,7 @@ export function BriefInput({
   isExampleLoaded,
   disabled,
 }: BriefInputProps) {
+  const { t } = useLang();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Lightweight local read of the brief, shown as intake signals. This is
@@ -73,12 +75,8 @@ export function BriefInput({
       <header className="flex items-start justify-between gap-6 border-b border-line px-6 py-5 sm:px-7">
         <div>
           <h2 className="text-[17px] leading-6 font-semibold tracking-[-0.015em] text-ink">
-            Start a Research Project
+            {t.intake.cardTitle}
           </h2>
-          <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">
-            Paste the brief exactly as the client sent it — mixed language and
-            unstructured notes are expected.
-          </p>
         </div>
         <button
           type="button"
@@ -92,7 +90,7 @@ export function BriefInput({
           )}
         >
           <FileText size={14} />
-          {isExampleLoaded ? 'Example loaded' : 'Load example brief'}
+          {isExampleLoaded ? t.intake.exampleLoaded : t.intake.loadExample}
         </button>
       </header>
 
@@ -109,8 +107,8 @@ export function BriefInput({
           }}
           disabled={disabled}
           spellCheck={false}
-          placeholder="Paste your client brief here..."
-          aria-label="Client brief"
+          placeholder={t.intake.placeholder}
+          aria-label={t.intake.briefLabel}
           className="h-[340px] w-full resize-none bg-transparent px-6 py-5 text-[13.5px] leading-[1.75] text-ink placeholder:text-ink-faint focus:outline-none sm:px-7"
         />
       </div>
@@ -119,22 +117,22 @@ export function BriefInput({
         <div className="flex min-h-[26px] flex-wrap items-center gap-x-2 gap-y-2">
           {signals ? (
             <>
-              <SignalChip label="Language" value={signals.language} />
+              <SignalChip label={t.intake.signalLanguage} value={signals.language} />
               <SignalChip
-                label="Named companies"
+                label={t.intake.signalCompanies}
                 value={String(signals.entities)}
               />
               <SignalChip
-                label="Sub-questions"
+                label={t.intake.signalQuestions}
                 value={String(signals.questions)}
               />
               <span className="text-[11px] text-ink-faint tabular-nums">
-                {signals.characters} characters
+                {t.intake.characters(signals.characters)}
               </span>
             </>
           ) : (
             <span className="text-[12px] text-ink-faint">
-              Intake signals appear as you paste.
+              {t.intake.emptySignals}
             </span>
           )}
         </div>
@@ -154,12 +152,12 @@ export function BriefInput({
             className={cn(
               'group inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-[13px] font-semibold transition-colors',
               canSubmit
-                ? 'bg-accent text-white shadow-[0_1px_2px_rgba(79,70,229,0.35),0_8px_20px_-10px_rgba(79,70,229,0.6)] hover:bg-[#443bd4]'
+                ? 'bg-accent text-white shadow-[0_1px_2px_rgba(111,69,32,0.35),0_8px_20px_-10px_rgba(111,69,32,0.6)] hover:bg-[#573717]'
                 : 'cursor-not-allowed bg-canvas-sunken text-ink-faint',
             )}
           >
             <Sparkle size={15} />
-            Analyze Brief
+            {t.intake.analyze}
             <ArrowRight
               size={15}
               className="transition-transform duration-200 group-hover:translate-x-0.5"

@@ -1,23 +1,23 @@
+import { useLang } from '@/i18n';
 import { cn } from '@/lib/cn';
 import type { ExpertTier } from '@/types';
 
-const TIER_STYLES: Record<ExpertTier, { chip: string; dot: string; hint: string }> = {
+const TIER_STYLES: Record<ExpertTier, { chip: string; dot: string }> = {
   'Tier 1': {
     chip: 'bg-accent-soft text-accent border-accent-line',
     dot: 'bg-accent',
-    hint: 'Primary — source first',
   },
   'Tier 2': {
     chip: 'bg-canvas-sunken text-ink-muted border-line-strong',
     dot: 'bg-ink-soft',
-    hint: 'Supporting — adds depth',
   },
   'Tier 3': {
     chip: 'bg-surface text-ink-soft border-line',
     dot: 'bg-ink-faint',
-    hint: 'Optional — context only',
   },
 };
+
+/** Tier labels stay English — they are the firm's internal vocabulary. */
 
 interface ExpertTierBadgeProps {
   tier: ExpertTier;
@@ -27,6 +27,7 @@ interface ExpertTierBadgeProps {
 }
 
 export function ExpertTierBadge({ tier, withHint, className }: ExpertTierBadgeProps) {
+  const { t } = useLang();
   const style = TIER_STYLES[tier];
 
   return (
@@ -41,7 +42,9 @@ export function ExpertTierBadge({ tier, withHint, className }: ExpertTierBadgePr
         {tier}
       </span>
       {withHint && (
-        <span className="text-[11px] text-ink-faint">{style.hint}</span>
+        <span className="text-[11px] text-ink-faint">
+          {t.agent3.tierHint[tier]}
+        </span>
       )}
     </span>
   );

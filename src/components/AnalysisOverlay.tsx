@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Check } from '@/components/icons';
+import { useLang } from '@/i18n';
 import { cn } from '@/lib/cn';
 import type { AnalysisStage } from '@/services/aiService';
 
@@ -9,11 +10,15 @@ interface AnalysisOverlayProps {
   completed: number;
 }
 
+/** Stage ids from the service map onto the translated stage copy. */
+const STAGE_KEYS = ['parse', 'agent1', 'agent2', 'agent3'] as const;
+
 /**
  * The transition between intake and dashboard. It exists to make the pipeline
  * legible: three named agents, running in sequence, each producing one tab.
  */
 export function AnalysisOverlay({ stages, completed }: AnalysisOverlayProps) {
+  const { t } = useLang();
   const progress = Math.round((completed / stages.length) * 100);
 
   return (
@@ -34,18 +39,17 @@ export function AnalysisOverlay({ stages, completed }: AnalysisOverlayProps) {
         className="w-full max-w-lg rounded-2xl border border-line bg-surface p-7 shadow-overlay"
       >
         <div className="flex items-baseline justify-between">
-          <p className="label-eyebrow">Running analysis</p>
+          <p className="label-eyebrow">{t.analysis.eyebrow}</p>
           <span className="text-[11px] tabular-nums text-ink-faint">
             {progress}%
           </span>
         </div>
 
         <h2 className="mt-3 text-[17px] font-semibold tracking-[-0.015em] text-ink">
-          Reading the brief like a senior CSA
+          {t.analysis.title}
         </h2>
         <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">
-          Three agents run in sequence. Each one produces a section of the
-          research dashboard.
+          {t.analysis.subtitle}
         </p>
 
         <div className="mt-5 h-1 w-full overflow-hidden rounded-full bg-canvas-sunken">
@@ -59,6 +63,7 @@ export function AnalysisOverlay({ stages, completed }: AnalysisOverlayProps) {
 
         <ol className="mt-6 space-y-1">
           {stages.map((stage, index) => {
+            const copy = t.stages[STAGE_KEYS[index] ?? 'parse'];
             const isDone = index < completed;
             const isRunning = index === completed;
 
@@ -99,7 +104,7 @@ export function AnalysisOverlay({ stages, completed }: AnalysisOverlayProps) {
                         isDone || isRunning ? 'text-ink' : 'text-ink-faint',
                       )}
                     >
-                      {stage.label}
+                      {copy.label}
                     </span>
                     <span
                       className={cn(
@@ -109,7 +114,7 @@ export function AnalysisOverlay({ stages, completed }: AnalysisOverlayProps) {
                           : 'bg-canvas-sunken text-ink-faint',
                       )}
                     >
-                      {stage.agent}
+                      {copy.agent}
                     </span>
                   </span>
                   <span
@@ -118,7 +123,7 @@ export function AnalysisOverlay({ stages, completed }: AnalysisOverlayProps) {
                       isDone || isRunning ? 'text-ink-soft' : 'text-ink-faint',
                     )}
                   >
-                    {stage.detail}
+                    {copy.detail}
                   </span>
                 </span>
               </li>

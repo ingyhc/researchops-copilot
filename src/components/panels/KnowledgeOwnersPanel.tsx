@@ -3,6 +3,8 @@ import { InsightCard } from '@/components/InsightCard';
 import { KnowledgeOwnerTable } from '@/components/KnowledgeOwnerTable';
 import { ExpertTierBadge } from '@/components/ExpertTierBadge';
 import { AlertTriangle, ArrowRight, Check, Copy } from '@/components/icons';
+import { useLang } from '@/i18n';
+import type { Strings } from '@/i18n';
 import type { KnowledgeOwnerMap } from '@/types';
 
 interface KnowledgeOwnersPanelProps {
@@ -11,18 +13,24 @@ interface KnowledgeOwnersPanelProps {
 }
 
 /** Formats the mapping as plain text a CSA can paste into a sourcing ticket. */
-function toSourcingPlan(data: KnowledgeOwnerMap, projectTitle: string): string {
-  const lines = [`SOURCING PLAN — ${projectTitle}`, ''];
+function toSourcingPlan(
+  data: KnowledgeOwnerMap,
+  projectTitle: string,
+  t: Strings,
+): string {
+  const lines = [`${t.agent3.planHeading} — ${projectTitle}`, ''];
 
   data.rows.forEach((row, i) => {
     lines.push(`${i + 1}. ${row.question}`);
-    lines.push(`   Owner: ${row.knowledgeOwner} (${row.department}) — ${row.tier}`);
-    lines.push(`   Titles: ${row.recommendedTitles.join('; ')}`);
-    lines.push(`   Companies: ${row.sourceCompanies.join(', ')}`);
+    lines.push(
+      `   ${t.agent3.planOwner}: ${row.knowledgeOwner} (${row.department}) — ${row.tier}`,
+    );
+    lines.push(`   ${t.agent3.planTitles}: ${row.recommendedTitles.join('; ')}`);
+    lines.push(`   ${t.agent3.planCompanies}: ${row.sourceCompanies.join(', ')}`);
     lines.push('');
   });
 
-  lines.push('DO NOT SOURCE');
+  lines.push(t.agent3.planAvoid);
   data.avoid.forEach((item) => {
     lines.push(`- ${item.profile} — ${item.reason}`);
   });
@@ -35,11 +43,12 @@ export function KnowledgeOwnersPanel({
   data,
   projectTitle,
 }: KnowledgeOwnersPanelProps) {
+  const { t } = useLang();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(toSourcingPlan(data, projectTitle));
+      await navigator.clipboard.writeText(toSourcingPlan(data, projectTitle, t));
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -54,8 +63,7 @@ export function KnowledgeOwnersPanel({
       <InsightCard
         index={0}
         flush
-        eyebrow="Agent 3 · Knowledge owner mapping"
-        title="Where the answers actually sit"
+        title={t.agent3.title}
         description={data.summary}
         aside={
           <button
@@ -66,12 +74,12 @@ export function KnowledgeOwnersPanel({
             {copied ? (
               <>
                 <Check size={14} className="text-positive" />
-                Copied
+                {t.agent3.copied}
               </>
             ) : (
               <>
                 <Copy size={14} />
-                Copy sourcing plan
+                {t.agent3.copyPlan}
               </>
             )}
           </button>
@@ -82,13 +90,13 @@ export function KnowledgeOwnersPanel({
             <span className="font-semibold text-ink tabular-nums">
               {data.rows.length}
             </span>{' '}
-            research questions mapped
+            {t.agent3.questionsMapped}
           </span>
           <span className="text-[11.5px] text-ink-soft">
             <span className="font-semibold text-ink tabular-nums">
               {tierOneCount}
             </span>{' '}
-            primary sourcing targets
+            {t.agent3.primaryTargets}
           </span>
           <div className="ml-auto flex flex-wrap items-center gap-4">
             <ExpertTierBadge tier="Tier 1" withHint />
@@ -99,20 +107,18 @@ export function KnowledgeOwnersPanel({
         <KnowledgeOwnerTable rows={data.rows} />
 
         <p className="border-t border-line px-6 py-3 text-[11.5px] text-ink-faint">
-          Select a row to see why that function owns the answer, plus screening
-          questions for the call.
+          {t.agent3.rowHint}
         </p>
       </InsightCard>
 
       <InsightCard
         index={1}
-        eyebrow="Screening guardrails"
-        title="Profiles To Avoid"
-        description="These profiles look relevant on paper and waste sourcing cycles. Each one is paired with the profile to source instead."
+        title={t.agent3.avoidTitle}
+        description={t.agent3.avoidDescription}
         aside={
           <span className="inline-flex items-center gap-1.5 rounded-full border border-[#f0e3c6] bg-caution-soft px-2.5 py-1 text-[11px] font-semibold text-caution">
             <AlertTriangle size={12} />
-            {data.avoid.length} to exclude
+            {t.agent3.toExclude(data.avoid.length)}
           </span>
         }
       >
@@ -131,7 +137,7 @@ export function KnowledgeOwnersPanel({
               <div className="mt-3 flex items-center gap-2 border-t border-line pt-3">
                 <ArrowRight size={13} className="shrink-0 text-accent" />
                 <span className="text-[12px] text-ink-soft">
-                  Source instead:{' '}
+                  {t.agent3.sourceInstead}{' '}
                   <span className="font-medium text-ink">{item.insteadSource}</span>
                 </span>
               </div>

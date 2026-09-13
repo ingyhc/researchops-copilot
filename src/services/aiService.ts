@@ -1,4 +1,6 @@
 import { mockProject } from '@/data/mockProject';
+import { mockProjectZh } from '@/data/mockProject.zh';
+import type { Lang } from '@/i18n/strings';
 import type { ResearchProject } from '@/types';
 
 /**
@@ -56,6 +58,8 @@ export const ANALYSIS_STAGES: AnalysisStage[] = [
 ];
 
 export interface AnalyzeBriefOptions {
+  /** Which language the analysis should come back in. */
+  lang?: Lang;
   /** Fired as each pipeline stage completes. */
   onStage?: (stage: AnalysisStage, index: number) => void;
   /** Abort the (simulated) run — wired for parity with the real client. */
@@ -95,7 +99,7 @@ export async function analyzeBrief(
   briefText: string,
   options: AnalyzeBriefOptions = {},
 ): Promise<ResearchProject> {
-  const { onStage, signal } = options;
+  const { lang = 'en', onStage, signal } = options;
   const startedAt = Date.now();
 
   for (let i = 0; i < ANALYSIS_STAGES.length; i += 1) {
@@ -107,11 +111,29 @@ export async function analyzeBrief(
   // TODO(phase-2): replace with a call to the Coze workflow, e.g.
   //   const res = await fetch(`${COZE_BASE_URL}/v1/workflow/run`, { ... });
   //   return normalizeCozeResponse(await res.json());
+  const fixture = lang === 'zh' ? mockProjectZh : mockProject;
   return {
-    ...mockProject,
-    briefText: briefText.trim() || mockProject.briefText,
+    ...fixture,
+    briefText: briefText.trim() || fixture.briefText,
     submittedAt: new Date().toISOString(),
     analysisDurationMs: Date.now() - startedAt,
+  };
+}
+
+/**
+ * Re-render an existing result in another language. Phase 1 swaps fixtures;
+ * Phase 2 will re-request the analysis from the workflow.
+ */
+export function localizeProject(
+  project: ResearchProject,
+  lang: Lang,
+): ResearchProject {
+  const fixture = lang === 'zh' ? mockProjectZh : mockProject;
+  return {
+    ...fixture,
+    briefText: project.briefText,
+    submittedAt: project.submittedAt,
+    analysisDurationMs: project.analysisDurationMs,
   };
 }
 

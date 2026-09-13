@@ -139,23 +139,19 @@ export const Dot = ({ size = 8, ...p }: IconProps) => (
   </svg>
 );
 
-export const Logo = ({ size = 26, ...p }: IconProps) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 28 28"
-    fill="none"
-    aria-hidden="true"
-    {...p}
+export const Logo = ({
+  size = 26,
+  className,
+}: {
+  size?: number;
+  className?: string;
+}) => (
+  <span
+    role="img"
+    aria-label="Research Copilot"
+    className={className}
+    style={{ fontSize: size, lineHeight: 1, display: 'inline-block' }}
   >
-    <rect width="28" height="28" rx="7" fill="#1A1A1A" />
-    <path
-      d="M8 19.5V8.5h5.4c2.2 0 3.6 1.3 3.6 3.3 0 1.6-.9 2.7-2.4 3.1l2.9 4.6"
-      stroke="#FFFFFF"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <circle cx="19.6" cy="9.4" r="2.4" fill="#4F46E5" />
-  </svg>
+    🦉
+  </span>
 );

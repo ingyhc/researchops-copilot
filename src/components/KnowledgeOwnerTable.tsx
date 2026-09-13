@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronRight } from '@/components/icons';
 import { ExpertTierBadge } from '@/components/ExpertTierBadge';
+import { useLang } from '@/i18n';
 import { cn } from '@/lib/cn';
 import type { KnowledgeOwnerRow } from '@/types';
 
@@ -15,6 +16,7 @@ interface KnowledgeOwnerTableProps {
  * questions — the part that actually teaches a junior CSA how to think.
  */
 export function KnowledgeOwnerTable({ rows }: KnowledgeOwnerTableProps) {
+  const { t } = useLang();
   const [expandedId, setExpandedId] = useState<string | null>(rows[0]?.id ?? null);
 
   return (
@@ -22,11 +24,11 @@ export function KnowledgeOwnerTable({ rows }: KnowledgeOwnerTableProps) {
       <table className="w-full min-w-[880px] border-collapse text-left">
         <thead>
           <tr className="border-b border-line">
-            <Th className="w-[24%] pl-6">Research Question</Th>
-            <Th className="w-[17%]">Knowledge Owner</Th>
-            <Th className="w-[15%]">Department</Th>
-            <Th className="w-[27%]">Recommended Titles</Th>
-            <Th className="w-[17%] pr-6">Expert Tier</Th>
+            <Th className="w-[24%] pl-6">{t.agent3.colQuestion}</Th>
+            <Th className="w-[17%]">{t.agent3.colOwner}</Th>
+            <Th className="w-[15%]">{t.agent3.colDepartment}</Th>
+            <Th className="w-[27%]">{t.agent3.colTitles}</Th>
+            <Th className="w-[17%] pr-6">{t.agent3.colTier}</Th>
           </tr>
         </thead>
         <tbody>
@@ -107,13 +109,13 @@ export function KnowledgeOwnerTable({ rows }: KnowledgeOwnerTableProps) {
                         >
                           <div className="grid gap-6 px-6 pt-1 pb-6 lg:grid-cols-3">
                             <div>
-                              <p className="label-eyebrow">Why this owner</p>
+                              <p className="label-eyebrow">{t.agent3.whyOwner}</p>
                               <p className="mt-2 text-[12.5px] leading-[1.7] text-ink-muted">
                                 {row.rationale}
                               </p>
                             </div>
                             <div>
-                              <p className="label-eyebrow">Screening questions</p>
+                              <p className="label-eyebrow">{t.agent3.screening}</p>
                               <ol className="mt-2 space-y-1.5">
                                 {row.screeningQuestions.map((question, i) => (
                                   <li
@@ -129,7 +131,7 @@ export function KnowledgeOwnerTable({ rows }: KnowledgeOwnerTableProps) {
                               </ol>
                             </div>
                             <div>
-                              <p className="label-eyebrow">Likely source companies</p>
+                              <p className="label-eyebrow">{t.agent3.companies}</p>
                               <div className="mt-2 flex flex-wrap gap-1.5">
                                 {row.sourceCompanies.map((company) => (
                                   <span

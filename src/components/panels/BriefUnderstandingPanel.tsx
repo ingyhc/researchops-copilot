@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { ConfidenceBadge } from '@/components/ConfidenceBadge';
 import { InsightCard } from '@/components/InsightCard';
 import { ChevronRight, HelpCircle } from '@/components/icons';
+import { useLang } from '@/i18n';
 import type { BriefInterpretation } from '@/types';
 
 interface BriefUnderstandingPanelProps {
@@ -10,11 +11,12 @@ interface BriefUnderstandingPanelProps {
 
 /** Agent 1 output. */
 export function BriefUnderstandingPanel({ data }: BriefUnderstandingPanelProps) {
+  const { t } = useLang();
+
   return (
     <div className="space-y-5">
       <InsightCard
         index={0}
-        eyebrow="Client objective"
         title={data.clientObjective.prompt}
       >
         <p className="max-w-3xl text-[15px] leading-[1.7] font-medium tracking-[-0.005em] text-ink">
@@ -22,7 +24,7 @@ export function BriefUnderstandingPanel({ data }: BriefUnderstandingPanelProps) 
         </p>
 
         <div className="mt-6 border-t border-line pt-5">
-          <p className="label-eyebrow">Broken into answerable questions</p>
+          <p className="label-eyebrow">{t.agent1.restated}</p>
           <ul className="mt-3 grid gap-2.5 lg:grid-cols-2">
             {data.clientObjective.restated.map((item) => (
               <li
@@ -42,8 +44,7 @@ export function BriefUnderstandingPanel({ data }: BriefUnderstandingPanelProps) 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
         <InsightCard
           index={1}
-          eyebrow="Industry context"
-          title="Where this brief sits"
+          title={t.agent1.industryContext}
           description={data.industryContext.note}
         >
           <div className="flex flex-col gap-1">
@@ -72,11 +73,10 @@ export function BriefUnderstandingPanel({ data }: BriefUnderstandingPanelProps) 
 
         <InsightCard
           index={2}
-          eyebrow="Key terms"
-          title="Vocabulary you need before the first expert call"
+          title={t.agent1.keyTerms}
           aside={
             <span className="text-[11px] text-ink-faint tabular-nums">
-              {data.keyTerms.length} terms
+              {t.agent1.termCount(data.keyTerms.length)}
             </span>
           }
         >
@@ -98,7 +98,9 @@ export function BriefUnderstandingPanel({ data }: BriefUnderstandingPanelProps) 
                   {term.definition}
                 </p>
                 <p className="mt-2 border-t border-line pt-2 text-[11.5px] leading-[1.55] text-ink-soft">
-                  <span className="font-medium text-ink-muted">Why it matters · </span>
+                  <span className="font-medium text-ink-muted">
+                    {t.agent1.whyItMatters}
+                  </span>
                   {term.whyItMatters}
                 </p>
               </div>
@@ -109,9 +111,8 @@ export function BriefUnderstandingPanel({ data }: BriefUnderstandingPanelProps) 
 
       <InsightCard
         index={3}
-        eyebrow="Possible business intents"
-        title="Three readings of the same brief"
-        description="The model does not commit to one interpretation. Confirm the intent with the client before sourcing — it changes which experts are primary."
+        title={t.agent1.intents}
+        description={t.agent1.intentsDescription}
       >
         <ul className="space-y-3">
           {data.businessIntents.map((intent, i) => (
@@ -145,12 +146,11 @@ export function BriefUnderstandingPanel({ data }: BriefUnderstandingPanelProps) 
 
       <InsightCard
         index={4}
-        eyebrow="Before you source"
-        title="Open questions to clarify with the client"
+        title={t.agent1.openQuestions}
         aside={
           <span className="inline-flex items-center gap-1.5 rounded-full border border-[#f0e3c6] bg-caution-soft px-2.5 py-1 text-[11px] font-semibold text-caution">
             <HelpCircle size={12} />
-            Needs confirmation
+            {t.agent1.needsConfirmation}
           </span>
         }
       >

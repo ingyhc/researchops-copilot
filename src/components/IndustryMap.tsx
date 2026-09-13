@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { IndustryNode } from '@/components/IndustryNode';
 import type { NodeState } from '@/components/IndustryNode';
+import { useLang } from '@/i18n';
 import { cn } from '@/lib/cn';
 import type { IndustryFramework, IndustryNodeData } from '@/types';
 
@@ -62,6 +63,7 @@ interface IndustryMapProps {
  * trace a path through the industry, not to read a list of companies.
  */
 export function IndustryMap({ framework, className }: IndustryMapProps) {
+  const { t } = useLang();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -110,8 +112,7 @@ export function IndustryMap({ framework, className }: IndustryMapProps) {
     <div className={cn('surface-card overflow-hidden', className)}>
       <header className="flex flex-wrap items-start justify-between gap-4 border-b border-line px-6 py-5">
         <div className="max-w-2xl">
-          <p className="label-eyebrow">Agent 2 · Industry framework</p>
-          <h3 className="mt-2 text-[15px] leading-6 font-semibold tracking-[-0.01em] text-ink">
+          <h3 className="text-[15px] leading-6 font-semibold tracking-[-0.01em] text-ink">
             {framework.headline}
           </h3>
           <p className="mt-1.5 text-[13px] leading-[1.65] text-ink-soft">
@@ -130,7 +131,7 @@ export function IndustryMap({ framework, className }: IndustryMapProps) {
                 strokeWidth="1.5"
               />
             </svg>
-            Direct flow
+            {t.agent2.legendDirect}
           </LegendRow>
           <LegendRow>
             <svg width="26" height="8" aria-hidden="true">
@@ -144,13 +145,13 @@ export function IndustryMap({ framework, className }: IndustryMapProps) {
                 strokeDasharray="3 3"
               />
             </svg>
-            Conditional
+            {t.agent2.legendConditional}
           </LegendRow>
           <LegendRow>
             <span className="inline-flex w-[26px] justify-center">
               <span className="size-1.5 rounded-full bg-accent" />
             </span>
-            Client focus
+            {t.agent2.legendFocus}
           </LegendRow>
         </div>
       </header>
@@ -236,7 +237,7 @@ export function IndustryMap({ framework, className }: IndustryMapProps) {
                   markerHeight="6"
                   orient="auto"
                 >
-                  <path d="M0 1.5 L6 4 L0 6.5 Z" fill="#4f46e5" />
+                  <path d="M0 1.5 L6 4 L0 6.5 Z" fill="#6f4520" />
                 </marker>
               </defs>
 
@@ -330,7 +331,7 @@ export function IndustryMap({ framework, className }: IndustryMapProps) {
                   )}
                   {inspected.isFocus && (
                     <span className="rounded-full border border-accent-line bg-accent-soft px-2 py-0.5 text-[10px] font-semibold text-accent">
-                      Client focus
+                      {t.agent2.clientFocusChip}
                     </span>
                   )}
                 </div>
@@ -340,9 +341,12 @@ export function IndustryMap({ framework, className }: IndustryMapProps) {
                 <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
                   {(upstream.length > 0 || downstream.length > 0) && (
                     <>
-                      <ConnectionList label="Upstream" items={upstream as string[]} />
                       <ConnectionList
-                        label="Downstream"
+                        label={t.agent2.upstream}
+                        items={upstream as string[]}
+                      />
+                      <ConnectionList
+                        label={t.agent2.downstream}
                         items={downstream as string[]}
                       />
                     </>
@@ -371,7 +375,7 @@ export function IndustryMap({ framework, className }: IndustryMapProps) {
               exit={{ opacity: 0 }}
               className="py-2 text-[12.5px] text-ink-soft"
             >
-              Hover a node to trace its connections, or click to pin it open.
+              {t.agent2.inspectorHint}
             </motion.p>
           )}
         </AnimatePresence>

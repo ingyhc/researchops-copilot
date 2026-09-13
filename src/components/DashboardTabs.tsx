@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import type { ComponentType, SVGProps } from 'react';
+import { useLang } from '@/i18n';
 import { cn } from '@/lib/cn';
 
 export interface TabDefinition<T extends string = string> {
@@ -25,10 +26,12 @@ export function DashboardTabs<T extends string>({
   onChange,
   className,
 }: DashboardTabsProps<T>) {
+  const { t } = useLang();
+
   return (
     <div
       role="tablist"
-      aria-label="Research output"
+      aria-label={t.dashboard.tablistLabel}
       className={cn('flex items-stretch gap-1 overflow-x-auto', className)}
     >
       {tabs.map((tab) => {

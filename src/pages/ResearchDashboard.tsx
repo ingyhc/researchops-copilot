@@ -14,6 +14,7 @@ import {
   Layers,
   Users,
 } from '@/components/icons';
+import { useLang } from '@/i18n';
 import { cn } from '@/lib/cn';
 import type { ResearchProject } from '@/types';
 
@@ -28,28 +29,29 @@ export function ResearchDashboard({
   project,
   onNewProject,
 }: ResearchDashboardProps) {
+  const { lang, t } = useLang();
   const [activeTab, setActiveTab] = useState<TabId>('brief');
   const [briefOpen, setBriefOpen] = useState(false);
 
   const tabs: TabDefinition<TabId>[] = [
     {
       id: 'brief',
-      label: 'Brief Understanding',
-      agent: 'Agent 1',
+      label: t.dashboard.tabBrief,
+      agent: t.stages.agent1.agent,
       icon: Compass,
       count: project.briefInterpretation.businessIntents.length,
     },
     {
       id: 'industry',
-      label: 'Industry Intelligence',
-      agent: 'Agent 2',
+      label: t.dashboard.tabIndustry,
+      agent: t.stages.agent2.agent,
       icon: Layers,
       count: project.industryFramework.nodes.length,
     },
     {
       id: 'owners',
-      label: 'Knowledge Owners',
-      agent: 'Agent 3',
+      label: t.dashboard.tabOwners,
+      agent: t.stages.agent3.agent,
       icon: Users,
       count: project.knowledgeOwners.rows.length,
     },
@@ -71,7 +73,7 @@ export function ResearchDashboard({
               className="inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 transition-colors hover:bg-canvas-sunken hover:text-ink"
             >
               <ArrowLeft size={13} />
-              Projects
+              {t.dashboard.projects}
             </button>
             <span aria-hidden="true">/</span>
             <span className="truncate text-ink-muted">{project.title}</span>
@@ -85,16 +87,16 @@ export function ResearchDashboard({
                 </h1>
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-[#cfe6dd] bg-positive-soft px-2.5 py-1 text-[11px] font-semibold text-positive">
                   <Check size={12} strokeWidth={2.5} />
-                  {project.status}
+                  {lang === 'zh' ? '分析完成' : project.status}
                 </span>
               </div>
 
               <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-ink-soft">
-                <MetaItem label="Client" value={project.client} />
-                <MetaItem label="Sector" value={project.sector} />
+                <MetaItem label={t.dashboard.client} value={project.client} />
+                <MetaItem label={t.dashboard.sector} value={project.sector} />
                 <MetaItem
-                  label="Analyzed"
-                  value={new Date(project.submittedAt).toLocaleString(undefined, {
+                  label={t.dashboard.analyzed}
+                  value={new Date(project.submittedAt).toLocaleString(lang === 'zh' ? 'zh-CN' : undefined, {
                     month: 'short',
                     day: 'numeric',
                     hour: '2-digit',
@@ -102,8 +104,10 @@ export function ResearchDashboard({
                   })}
                 />
                 <MetaItem
-                  label="Runtime"
-                  value={`${(project.analysisDurationMs / 1000).toFixed(1)}s · 3 agents`}
+                  label={t.dashboard.runtime}
+                  value={t.dashboard.agents(
+                    (project.analysisDurationMs / 1000).toFixed(1),
+                  )}
                 />
               </div>
             </div>
@@ -121,7 +125,7 @@ export function ResearchDashboard({
                 aria-expanded={briefOpen}
               >
                 <FileText size={14} />
-                Original brief
+                {t.dashboard.originalBrief}
                 <ChevronDown
                   size={13}
                   className={cn(
@@ -135,7 +139,7 @@ export function ResearchDashboard({
                 onClick={onNewProject}
                 className="inline-flex items-center gap-2 rounded-lg bg-ink px-3 py-2 text-[12px] font-semibold text-white transition-colors hover:bg-[#2e2e2c]"
               >
-                New project
+                {t.dashboard.newProject}
               </button>
             </div>
           </div>
@@ -150,7 +154,7 @@ export function ResearchDashboard({
                 className="overflow-hidden"
               >
                 <div className="mt-4 rounded-xl border border-line bg-surface p-5">
-                  <p className="label-eyebrow">Brief as received</p>
+                  <p className="label-eyebrow">{t.dashboard.briefAsReceived}</p>
                   <pre className="mt-3 max-h-64 overflow-auto font-sans text-[12.5px] leading-[1.75] whitespace-pre-wrap text-ink-muted">
                     {project.briefText}
                   </pre>

@@ -1,24 +1,22 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { AnalysisOverlay } from '@/components/AnalysisOverlay';
 import { ProjectIntake } from '@/pages/ProjectIntake';
 import { ResearchDashboard } from '@/pages/ResearchDashboard';
 import { Compass, Layers, Logo, Search, Settings, Users } from '@/components/icons';
-import { ANALYSIS_STAGES, analyzeBrief } from '@/services/aiService';
+import { LanguageSwitch } from '@/components/LanguageSwitch';
+import { useLang } from '@/i18n';
+import { ANALYSIS_STAGES, analyzeBrief, localizeProject } from '@/services/aiService';
 import { EXAMPLE_BRIEF } from '@/data/mockProject';
 import { cn } from '@/lib/cn';
 import type { ResearchProject } from '@/types';
 
 type View = 'intake' | 'dashboard';
 
-const RAIL_ITEMS = [
-  { id: 'projects', icon: Compass, label: 'Projects' },
-  { id: 'frameworks', icon: Layers, label: 'Industry frameworks' },
-  { id: 'experts', icon: Users, label: 'Expert library' },
-  { id: 'search', icon: Search, label: 'Search' },
-];
+const RAIL_ICONS = [Compass, Layers, Users, Search];
 
 export function App() {
+  const { lang, t } = useLang();
   const [view, setView] = useState<View>('intake');
   const [brief, setBrief] = useState(EXAMPLE_BRIEF);
   const [project, setProject] = useState<ResearchProject | null>(null);
@@ -31,6 +29,7 @@ export function App() {
     setCompletedStages(0);
 
     const result = await analyzeBrief(brief, {
+      lang,
       onStage: (_stage, index) => setCompletedStages(index + 1),
     });
 
@@ -40,7 +39,12 @@ export function App() {
     setProject(result);
     setView('dashboard');
     setIsAnalyzing(false);
-  }, [brief, isAnalyzing]);
+  }, [brief, isAnalyzing, lang]);
+
+  // A language switch re-skins an already-finished analysis in place.
+  useEffect(() => {
+    setProject((current) => (current ? localizeProject(current, lang) : current));
+  }, [lang]);
 
   const handleNewProject = useCallback(() => {
     setView('intake');
@@ -55,20 +59,25 @@ export function App() {
           on pages taller than the viewport; the nav itself sticks. */}
       <div className="hidden w-14 shrink-0 border-r border-line bg-surface lg:block">
         <nav
-          aria-label="Workspace"
+          aria-label={t.app.rail.workspace}
           className="sticky top-0 flex h-screen flex-col items-center py-4"
         >
         <Logo size={26} />
         <div className="mt-6 flex flex-1 flex-col items-center gap-1">
-          {RAIL_ITEMS.map((item, index) => {
-            const Icon = item.icon;
+          {RAIL_ICONS.map((Icon, index) => {
+            const label = [
+              t.app.rail.projects,
+              t.app.rail.frameworks,
+              t.app.rail.experts,
+              t.app.rail.search,
+            ][index];
             const isActive = index === 0;
             return (
               <button
-                key={item.id}
+                key={label}
                 type="button"
-                title={item.label}
-                aria-label={item.label}
+                title={label}
+                aria-label={label}
                 className={cn(
                   'flex size-9 items-center justify-center rounded-lg transition-colors',
                   isActive
@@ -83,8 +92,8 @@ export function App() {
         </div>
         <button
           type="button"
-          title="Settings"
-          aria-label="Settings"
+          title={t.app.rail.settings}
+          aria-label={t.app.rail.settings}
           className="flex size-9 items-center justify-center rounded-lg text-ink-faint transition-colors hover:bg-canvas hover:text-ink-muted"
         >
           <Settings size={17} />
@@ -102,18 +111,21 @@ export function App() {
               <Logo size={22} />
             </span>
             <span className="text-[12.5px] font-semibold tracking-[-0.01em] text-ink">
-              ResearchOps Copilot
+              {t.app.name}
             </span>
             <span className="rounded border border-line bg-canvas px-1.5 py-0.5 text-[10px] font-medium text-ink-faint">
-              Internal
+              {t.app.internal}
             </span>
           </div>
-          <span
-            className="rounded-full border border-[#f0e3c6] bg-caution-soft px-2.5 py-1 text-[10.5px] font-semibold text-caution"
-            title="Phase 1 prototype — all output is mock data, no model is called."
-          >
-            Mock data · Phase 1
-          </span>
+          <div className="flex items-center gap-3">
+            <LanguageSwitch />
+            <span
+              className="rounded-full border border-[#f0e3c6] bg-caution-soft px-2.5 py-1 text-[10.5px] font-semibold text-caution"
+              title={t.app.mockBadgeTitle}
+            >
+              {t.app.mockBadge}
+            </span>
+          </div>
         </div>
 
         <main className="min-w-0 flex-1">

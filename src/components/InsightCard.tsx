@@ -3,8 +3,6 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/cn';
 
 interface InsightCardProps {
-  /** Small uppercase label — usually the agent or section name. */
-  eyebrow?: string;
   title?: string;
   description?: string;
   /** Rendered top-right: a badge, count or action. */
@@ -20,10 +18,9 @@ interface InsightCardProps {
 
 /**
  * The base analytical surface. Every panel on the dashboard is one of these so
- * the rhythm of eyebrow → title → body stays identical across all three agents.
+ * the rhythm of title → description → body stays identical across all three agents.
  */
 export function InsightCard({
-  eyebrow,
   title,
   description,
   aside,
@@ -44,7 +41,7 @@ export function InsightCard({
       }}
       className={cn('surface-card overflow-hidden', className)}
     >
-      {(eyebrow || title || description || aside) && (
+      {(title || description || aside) && (
         <header
           className={cn(
             'flex items-start justify-between gap-6 px-6 pt-5',
@@ -52,14 +49,8 @@ export function InsightCard({
           )}
         >
           <div className="min-w-0">
-            {eyebrow && <p className="label-eyebrow">{eyebrow}</p>}
             {title && (
-              <h3
-                className={cn(
-                  'text-[15px] leading-6 font-semibold tracking-[-0.01em] text-ink',
-                  eyebrow && 'mt-2',
-                )}
-              >
+              <h3 className="text-[15px] leading-6 font-semibold tracking-[-0.01em] text-ink">
                 {title}
               </h3>
             )}
